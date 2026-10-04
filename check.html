@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mamba check.</title>
+<style>
+  :root {
+    --amber: #f6b21b;
+    --ink: #0c0c0e;
+    --card: rgba(14, 14, 17, 0.86);
+    --line: rgba(255, 255, 255, 0.12);
+    --muted: #9ca3af;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--ink) url("assets/mamba-bg.png") center / cover no-repeat fixed;
+    color: #fff;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(5, 5, 8, 0.55) 0%, rgba(5, 5, 8, 0.25) 45%, rgba(5, 5, 8, 0.65) 100%);
+    pointer-events: none;
+  }
+
+  .stage {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr minmax(340px, 460px);
+    gap: 56px;
+    align-items: center;
+    padding: 48px 56px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--amber);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 44px;
+    height: 2px;
+    background: var(--amber);
+  }
+
+  h1 {
+    margin-top: 18px;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: clamp(64px, 9vw, 116px);
+    line-height: 0.95;
+  }
+
+  h1 em {
+    display: block;
+    color: var(--amber);
+    font-style: italic;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 34px 32px 30px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .nb {
+    font-size: 15px;
+    color: #e5e7eb;
+  }
+
+  .nb strong { color: var(--amber); font-weight: 700; }
+  .nb em { color: #d1d5db; }
+
+  .pressure {
+    margin-top: 14px;
+    color: var(--amber);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .retry-note {
+    margin-top: 14px;
+    padding-left: 12px;
+    border-left: 3px solid var(--amber);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .question {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 128px;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .q-media video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #000;
+  }
+
+  .q-media figcaption {
+    margin-top: 8px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .q-title {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.15;
+  }
+
+  .q-title em { color: var(--amber); font-style: italic; }
+
+  .dodge-zone {
+    position: relative;
+    min-height: 148px;
+    margin-top: 18px;
+  }
+
+  .row { display: flex; gap: 14px; }
+
+  .btn {
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 13px 30px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .btn.yes {
+    background: var(--amber);
+    color: #141414;
+  }
+
+  .btn.yes:hover { background: #ffc63f; }
+
+  .btn.no {
+    background: #17181c;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+    transition: top 0.22s cubic-bezier(0.3, 1.4, 0.6, 1), left 0.22s cubic-bezier(0.3, 1.4, 0.6, 1);
+  }
+
+  .btn.no.loose { position: absolute; }
+
+  .joke {
+    min-height: 20px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 26px 0 0;
+  }
+
+  @media (max-width: 900px) {
+    .stage {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 40px 20px;
+    }
+    .card { padding: 24px 18px 20px; }
+    .question {
+      margin-top: 14px;
+      grid-template-columns: minmax(0, 1fr) 76px;
+      gap: 12px;
+    }
+    .q-title { font-size: 24px; }
+    .dodge-zone {
+      min-height: 84px;
+      margin-top: 10px;
+    }
+    .joke {
+      margin-top: 4px;
+      min-height: 16px;
+      font-size: 12px;
+    }
+    hr { margin-top: 14px; }
+    .q-media figcaption { font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="hero">
+    <p class="eyebrow">The real question</p>
+    <h1>Mamba <em>check.</em></h1>
+  </section>
+
+  <section class="card">
+    <p class="nb"><strong>NB:</strong> <em>mambas are highly favoured</em></p>
+    <p class="pressure">No pressure. Okay, a little pressure.</p>
+    <p class="retry-note" hidden>Pick the right answer this time.</p>
+
+    <div class="question" data-goto="yes1.html">
+      <div class="q-main">
+        <h2 class="q-title">Are you a <em>mamba</em>?</h2>
+        <div class="dodge-zone">
+          <div class="row">
+            <button class="btn yes" type="button">Yes</button>
+            <button class="btn no" type="button">No</button>
+          </div>
+        </div>
+        <p class="joke" aria-live="polite"></p>
+      </div>
+      <figure class="q-media">
+        <video src="croc-dance.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <figcaption>Real mambas. They dance when you say yes.</figcaption>
+      </figure>
+    </div>
+
+    <hr>
+
+    <div class="question" data-goto="yes2.html">
+      <div class="q-main">
+        <h2 class="q-title">Are you a <em>light-skinned</em> guy?</h2>
+        <div class="dodge-zone">
+          <div class="row">
+            <button class="btn yes" type="button">Yes</button>
+            <button class="btn no" type="button">No</button>
+          </div>
+        </div>
+        <p class="joke" aria-live="polite"></p>
+      </div>
+      <figure class="q-media">
+        <video src="mirror-boy.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <figcaption>Pick yes and your gonna end up handsome like me brooo...</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script>
+  const JOKES = [
+    "Nope.",
+    "Nice try.",
+    "Too slow.",
+    "It moved. Again.",
+    "The button has commitments.",
+    "Almost. Not really."
+  ];
+
+  document.querySelectorAll(".question").forEach((question) => {
+    const zone = question.querySelector(".dodge-zone");
+    const yes = question.querySelector(".yes");
+    const no = question.querySelector(".no");
+    const joke = question.querySelector(".joke");
+    let escapes = 0;
+
+    function escape() {
+      const zoneRect = zone.getBoundingClientRect();
+      const noRect = no.getBoundingClientRect();
+      const yesRect = yes.getBoundingClientRect();
+
+      no.classList.add("loose");
+
+      const pad = 4;
+      const maxX = zoneRect.width - noRect.width - pad;
+      const maxY = zoneRect.height - noRect.height - pad;
+      const minJump = Math.min(90, zoneRect.width / 3);
+
+      const overlapsYes = (x, y) =>
+        yes.offsetParent !== null &&
+        x < yesRect.left - zoneRect.left + yesRect.width + 10 &&
+        x + noRect.width + 10 > yesRect.left - zoneRect.left &&
+        y < yesRect.top - zoneRect.top + yesRect.height + 10 &&
+        y + noRect.height + 10 > yesRect.top - zoneRect.top;
+
+      const prevX = noRect.left - zoneRect.left;
+      const prevY = noRect.top - zoneRect.top;
+      const tooClose = (x, y) => Math.hypot(x - prevX, y - prevY) < minJump;
+
+      let x = 0;
+      let y = 0;
+      let settled = false;
+      for (let i = 0; i < 60 && !settled; i++) {
+        x = pad + Math.random() * Math.max(1, maxX - pad);
+        y = pad + Math.random() * Math.max(1, maxY - pad);
+        settled = !overlapsYes(x, y) && !tooClose(x, y);
+      }
+      if (!settled) {
+        for (let i = 0; i < 60 && !settled; i++) {
+          x = pad + Math.random() * Math.max(1, maxX - pad);
+          y = pad + Math.random() * Math.max(1, maxY - pad);
+          settled = !overlapsYes(x, y);
+        }
+      }
+
+      no.style.left = x + "px";
+      no.style.top = y + "px";
+    }
+
+    no.addEventListener("pointerenter", escape);
+    no.addEventListener("click", () => {
+      escape();
+      joke.textContent = JOKES[escapes % JOKES.length];
+      escapes++;
+    });
+
+    yes.addEventListener("click", () => {
+      window.location.href = question.dataset.goto;
+    });
+  });
+
+  if (new URLSearchParams(location.search).has("retry")) {
+    document.querySelector(".retry-note").hidden = false;
+  }
+</script>
+</body>
+</html>
